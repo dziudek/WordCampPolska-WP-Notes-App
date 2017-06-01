@@ -1,0 +1,28 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "devtron": "^1.4.0"
+  },
+  "dependencies": {
+    "classnames": "^2.2.5",
+    "codemirror": "^5.25.2",
+    "moment": "^2.18.1",
+    "moment-timezone": "^0.5.13",
+    "node-fetch": "^1.6.3",
+    "normalize.css": "^5.0.0",
+    "prop-types": "^15.5.10",
+    "react": "^15.4.2",
+    "react-addons-css-transition-group": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "react-md-editor": "^0.2.2",
+    "striptags": "^3.0.1"
+  }
+}

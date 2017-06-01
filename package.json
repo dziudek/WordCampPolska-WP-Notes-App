@@ -1,0 +1,33 @@
+{
+  "name": "wp-notes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron app/main.js",
+    "packager:osx": "electron-packager ./app WP-Notes --platform=darwin --arch=x64 --ignore=node_modules/electron-* --electron-version=1.6.8 --ignore=node_modules/devtron --overwrite --symlinks --icon app/assets/installation/icon.icns; electron-osx-flat H24Stats-darwin-x64/H24Stats.app"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-loader": "^6.4.1",
+    "babel-preset-es2015": "^6.24.0",
+    "babel-preset-react": "^6.23.0",
+    "devtron": "^1.4.0",
+    "electron": "^1.6.8",
+    "electron-packager": "^8.6.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-sass": "^3.1.0",
+    "gulp-sourcemaps": "^2.4.1"
+  },
+  "dependencies": {
+    "gulp-plumber": "^1.1.0",
+    "normalize.css": "^5.0.0",
+    "react": "^15.4.2",
+    "react-addons-css-transition-group": "^15.4.2",
+    "react-dom": "^15.4.2"
+  }
+}
