@@ -1,0 +1,105 @@
+.sidebar {
+    background: $bg-color2;
+    box-shadow: 2px 0 2px rgba(0, 0, 0, 0.125);
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    width: 320px;
+
+    &-list {
+        list-style-type: none;
+        height: calc(100vh - 153px);
+        margin: 20px 0;
+        overflow: scroll;
+        padding: 0;
+
+        &-item {
+            background: $light-color;
+            border: none;
+            border-left: 0px solid $light-color;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, .125);
+            cursor: default;
+            height: 0;
+            margin: 0 auto;
+            opacity: 0;
+            padding: 0 15px;
+            position: relative;
+            width: calc(100% - 20px);
+            transform: scaleY(0);
+            transform-origin: center top;
+            transition: all .25s ease-out;
+
+            &.is-active {
+                border-left: 5px solid $info-color;
+                box-shadow: 0 6px 10px rgba(0, 0, 0, .25);
+            }
+
+            &.is-visible {
+                height: auto;
+                margin-bottom: 10px;
+                padding-bottom: 10px;
+                opacity: .66;
+                padding-top: 10px;
+                transform: scaleY(1);
+
+                &.is-active {
+                    opacity: 1;
+                }
+            }
+
+            &-title {
+                cursor: default;
+                display: block;
+                font-size: 16px;
+                line-height: 1.6;
+            }
+
+            &-date {
+                color: $border-color1;
+                cursor: default;
+                display: block;
+                font-size: 12px;
+                font-style: italic;
+            }
+
+            &-delete {
+                color: $danger-color;
+                cursor: pointer;
+                font-size: 24px;
+                line-height: 24px;
+                position: absolute;
+                right: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                transition: all .25s ease-out;
+
+                &:hover {
+                    color: darken($danger-color, 20%);
+                }
+            }
+        }
+    }
+
+    & > button {
+        background: $success-color;
+        border: none;
+        bottom: 0;
+        box-shadow: 0 0 10px rgba(0, 0, 0, .125);
+        color: $light-color;
+        cursor: pointer;
+        font-size: 20px;
+        font-weight: 400;
+        height: 64px;
+        left: 0;
+        line-height: 63px;
+        position: absolute;
+        right: 0;
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, .125);
+        transition: all .25s ease-out;
+        width: 100%;
+
+        &:hover {
+            background: darken($success-color, 20%);
+        }
+    }
+}

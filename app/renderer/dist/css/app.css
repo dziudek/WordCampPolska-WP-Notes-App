@@ -24,10 +24,6 @@ textarea {
   background: #fff;
   display: flex; }
 
-.editor {
-  height: 100vh;
-  width: calc(100% - 320px); }
-
 .sidebar {
   background: #efefef;
   box-shadow: 2px 0 2px rgba(0, 0, 0, 0.125);
@@ -111,6 +107,17 @@ textarea {
     .sidebar > button:hover {
       background: #226237; }
 
+.search {
+  padding: 0;
+  width: 100%; }
+  .search-input {
+    border: none;
+    border-bottom: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.125);
+    font-size: 16px;
+    padding: 15px 20px;
+    width: 100%; }
+
 .login {
   left: 50%;
   position: absolute;
@@ -172,43 +179,33 @@ textarea {
     .login-loader.is-visible {
       display: block; }
 
-.search {
-  padding: 0;
-  width: 100%; }
-  .search-input {
+.editor {
+  height: 100vh;
+  width: calc(100% - 320px); }
+  .editor > input {
     border: none;
     border-bottom: 1px solid #ccc;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.125);
-    font-size: 16px;
-    padding: 15px 20px;
-    width: 100%; }
-
-.editor > input {
-  border: none;
-  border-bottom: 1px solid #ccc;
-  display: block;
-  font-family: 'Roboto Mono', monospace;
-  font-size: 32px;
-  font-weight: 300;
-  height: 56px;
-  margin: 40px auto;
-  width: 780px; }
-
-.editor > .MDEditor > .MDEditor_toolbar {
-  display: none; }
-
-.editor > .MDEditor > .MDEditor_editor {
-  border: none;
-  height: calc(100vh - 176px);
-  margin: 0 auto;
-  width: 780px; }
-  .editor > .MDEditor > .MDEditor_editor .CodeMirror {
-    color: #555;
-    font-size: 20px;
+    display: block;
     font-family: 'Roboto Mono', monospace;
+    font-size: 32px;
     font-weight: 300;
+    height: 56px;
+    margin: 40px auto;
+    width: 780px; }
+  .editor > .MDEditor > .MDEditor_toolbar {
+    display: none; }
+  .editor > .MDEditor > .MDEditor_editor {
+    border: none;
     height: calc(100vh - 176px);
-    line-height: 1.6; }
+    margin: 0 auto;
+    width: 780px; }
+    .editor > .MDEditor > .MDEditor_editor .CodeMirror {
+      color: #555;
+      font-size: 20px;
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 300;
+      height: calc(100vh - 176px);
+      line-height: 1.6; }
 
 .cm-s-default .cm-header {
   color: #111;

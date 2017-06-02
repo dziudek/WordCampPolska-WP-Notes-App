@@ -1,0 +1,31 @@
+*,
+*:after,
+*:before {
+    box-sizing: border-box;
+}
+
+*:focus {
+    outline: none;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.6rem;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.app {
+    background: $bg-color1;
+    display: flex;
+}

@@ -1,0 +1,63 @@
+.cm-s-default {
+    .cm-header {
+        color: #111;
+        font-weight: 500;
+
+        &.cm-header-1 {
+            font-size: 42px;
+        }
+
+        &.cm-header-2 {
+            font-size: 36px;
+        }
+
+        &.cm-header-3 {
+            font-size: 30px;
+        }
+
+        &.cm-header-4 {
+            font-size: 26px;
+        }
+
+        &.cm-header-5 {
+            font-size: 23px;
+        }
+
+        &.cm-header-6 {
+            font-size: 20px;
+        }
+    }
+
+    .cm-em,
+    .cm-strong {
+        color: #333;
+        font-weight: 500;
+    }
+
+    .cm-link {
+        color: #55b;
+    }
+
+    .cm-url {
+        color: #55b;
+    }
+
+    .cm-variable-2 {
+        color: #333;
+    }
+
+    .cm-quote {
+        color: #aaa;
+    }
+
+    .cm-comment {
+        background: #f0f0f0;
+        color: #aaa;
+        display: inline-block;
+        width: 100%;
+
+        &.cm-variable-2 {
+            width: auto;
+        }
+    }
+}
