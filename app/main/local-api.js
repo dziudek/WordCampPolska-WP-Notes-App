@@ -6,6 +6,9 @@ const API = require('./api.js');
 const Utils = require('./utils.js');
 const moment = require('moment');
 
+/*
+ * Translations for the error messages
+ */
 const ERRORS = {
     WRONG_USER_ID: 'Brak ID użytkownika',
     MKDIR_FAILED: 'Wystąpił błąd podczas tworzenia katalogu użytkownika',
@@ -121,6 +124,14 @@ class LocalAPI extends API {
         event.sender.send('loadLocalPostResponse', fileContent);
     }
 
+    /**
+     *
+     * Adds post content to a local file
+     *
+     * @param event - handler for sending responses
+     * @param request - object with post ID, post title, user ID and post modification date
+     *
+     */
     static addLocalPost(event, request) {
         let pathToUserFiles = path.join(app.getPath('documents'), 'dziudek-wp-notes', (request.userID).toString());
         let localFiles = JSON.parse(fs.readFileSync(path.join(pathToUserFiles, 'files.json')));
@@ -138,6 +149,14 @@ class LocalAPI extends API {
         event.sender.send('addLocalPostResponse', true);
     }
 
+    /**
+     *
+     * Edits post content in a local file
+     *
+     * @param event - handler for sending responses
+     * @param request - object with post ID, post title, user ID and post modification date
+     *
+     */
     static editLocalPost(event, request) {
         let pathToUserFiles = path.join(app.getPath('documents'), 'dziudek-wp-notes', (request.userID).toString());
         let localFiles = JSON.parse(fs.readFileSync(path.join(pathToUserFiles, 'files.json')));
@@ -162,6 +181,14 @@ class LocalAPI extends API {
         event.sender.send('editLocalPostResponse', true);
     }
 
+    /**
+     *
+     * Removes post content from local file
+     *
+     * @param event - handler for sending responses
+     * @param request - object with post ID and user ID
+     *
+     */
     static removeLocalPost(event, request) {
         let pathToUserFiles = path.join(app.getPath('documents'), 'dziudek-wp-notes', (request.userID).toString());
         let localFiles = JSON.parse(fs.readFileSync(path.join(pathToUserFiles, 'files.json')));

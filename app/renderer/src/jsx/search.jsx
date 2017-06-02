@@ -6,6 +6,9 @@ class Search extends EventEmitter {
         super(props);
     }
 
+    /*
+     * Callback for the input value change
+     */
     searchChange() {
         let phrase = this.searchInput.value.toLowerCase().trim();
         this.dispatch('search-change', phrase);

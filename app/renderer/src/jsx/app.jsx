@@ -30,6 +30,12 @@ class App extends EventEmitter {
         this.subscribe('user-logged-in', this.setUserData.bind(this));
     }
 
+    /*
+     * Retrieves list of the local user posts
+     *
+     * @param userID - ID of the user
+     * @param token - token used in the REST API request
+     */
     getLocalPosts(userID, token = false) {
         ipcRenderer.send('loadRemotePosts', {
             token: token || this.state.token,
@@ -58,6 +64,13 @@ class App extends EventEmitter {
         });
     }
 
+    /*
+     * Retrieves title of a post with specific post ID
+     *
+     * @param id - id of the post
+     *
+     * @return title for a given post ID
+     */
     loadPostTitle(id) {
         let title = '';
 
@@ -70,6 +83,11 @@ class App extends EventEmitter {
         return title;
     }
 
+    /*
+     * Creates session data for the user and retrieves post data
+     *
+     * @param response - object with token and user data
+     */
     setUserData(response) {
         this.getLocalPosts(response.user_id, response.token);
 
@@ -80,6 +98,11 @@ class App extends EventEmitter {
         });
     }
 
+    /*
+     * Loads a specific post
+     *
+     * @param id - ID of the post to load
+     */
     getPost(id) {
         if(this.sidebar.state.activeItem && this.editor.state.haveChanges) {
             this.saveChanges(false);
@@ -96,6 +119,9 @@ class App extends EventEmitter {
         });
     }
 
+    /*
+     * Adds new posts
+     */
     addPost() {
         if(this.sidebar.state.activeItem !== false && this.editor.state.haveChanges) {
             this.saveChanges(false, true);
@@ -106,6 +132,11 @@ class App extends EventEmitter {
         this.editor.setContent('', '');
     }
 
+    /*
+     * Removes post with a given ID
+     *
+     * @param - id - ID of the post to remove
+     */
     removePost(id) {
         ipcRenderer.send('removeRemotePost', {
             token: this.state.token,
@@ -135,6 +166,12 @@ class App extends EventEmitter {
         });
     }
 
+    /*
+     * Saves changes in the post
+     *
+     * @param onWindowClose - flag used to detect if app is closing
+     * @param onNewPost - flag used to detect when new post is saved
+     */
     saveChanges(onWindowClose = false, onNewPost = false) {
         if(this.editor.state.title === '') {
             alert('Tytuł wpisu nie może być pusty');
@@ -155,6 +192,13 @@ class App extends EventEmitter {
         }
     }
 
+    /*
+     * Creates new post remotely and locally
+     *
+     * @param addedPost - post data to store locally and remotely
+     * @param onWindowClose - flag used to detect if app is closing
+     * @param onNewPost - flag used to detect when new post is saved
+     */
     addNewPost(addedPost, onWindowClose, onNewPost) {
         ipcRenderer.send('addRemotePost', {
             token: this.state.token,
@@ -207,6 +251,13 @@ class App extends EventEmitter {
         });
     }
 
+    /*
+     * Edits post remotely and locally
+     *
+     * @param updatedPost - post data to store locally and remotely
+     * @param onWindowClose - flag used to detect if app is closing
+     * @param onNewPost - flag used to detect when new post is saved
+     */
     editPost(updatedPost, onWindowClose, onNewPost) {
         ipcRenderer.send('editRemotePost', {
             token: this.state.token,
@@ -261,6 +312,9 @@ class App extends EventEmitter {
         });
     }
 
+    /*
+     * Removes user session data
+     */
     logout() {
         localStorage.clear();
 
@@ -274,6 +328,13 @@ class App extends EventEmitter {
         this.editor.setContent('', '');
     }
 
+    /*
+     * Checks given response for errors existence
+     *
+     * @param response - response to check for errors
+     *
+     * @return bool - if given response contains error or not
+     */
     detectedErrors(response) {
         if(response.data && response.data.status === 403) {
             this.logout();
@@ -306,7 +367,7 @@ class App extends EventEmitter {
             </div>
         );
     }
-
+    
     componentWillUnmount() {
         this.unsubscribe('item-remove', this.removePost);
         this.unsubscribe('item-show', this.getPost);

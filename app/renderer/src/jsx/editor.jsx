@@ -13,6 +13,11 @@ class Editor extends EventEmitter {
         };
     }
 
+    /*
+     * Update the post title state
+     *
+     * @param event - source of the title change
+     */
     updateTitle(event) {
         this.setState({
             title: event.target.value,
@@ -20,6 +25,11 @@ class Editor extends EventEmitter {
         });
     }
 
+    /*
+     * Update the post content state
+     *
+     * @param newContent - new content of the editor
+     */
     updateContent(newContent) {
         this.setState({
             content: newContent,
@@ -27,6 +37,12 @@ class Editor extends EventEmitter {
         });
     }
 
+    /*
+     * Update the post title and content state
+     *
+     * @param title - new title in the editor
+     * @param content - new content in the editor
+     */
     setContent(title, content) {
         this.setState({
             title: title,
@@ -34,7 +50,7 @@ class Editor extends EventEmitter {
             haveChanges: false
         });
     }
-
+    
     componentWillUpdate(nextProps, nextState) {
         if(nextState.haveChanges) {
             document.querySelector('title').innerHTML = "WP Notes - edycja";

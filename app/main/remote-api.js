@@ -7,6 +7,9 @@ const Utils = require('./utils.js');
 const moment = require('moment');
 const CONFIG = require('../config.js');
 
+/*
+ * Errors translations
+ */
 const ERRORS = {
     LOCAL_DATA_PARSE_ERROR: 'Błąd przetwarzania lokalnych danych. Spróbuj ponownie.',
     REMOTE_DATA_PARSE_ERROR: 'Błąd przetwarzania zdalnych danych. Spróbuj ponownie.',
@@ -24,8 +27,13 @@ class RemoteAPI extends API {
         }
     }
 
-    /*
-     * Get token for given credentials
+    /**
+     *
+     * Gets JWT token for a given credentials
+     *
+     * @param event - handler for sending responses
+     * @param credentials - object with username and password
+     *
      */
     static getToken(event, credentials) {
         fetch(CONFIG.restApiUrl + '/wp-json/jwt-auth/v1/token', {
@@ -72,11 +80,15 @@ class RemoteAPI extends API {
         .catch(err => RemoteAPI.error(event, 'getTokenResponse', 500, ERRORS.CONNECTION_ERROR));
     }
 
-    /*
-     * Initially sync the data with the remote endpoint
+    /**
+     *
+     * Syncs local posts data with the remote data
+     *
+     * @param event - handler for sending responses
+     * @param request - object with user ID, JWT token and user ID
+     *
      */
     static loadRemotePosts(event, request) {
-        // Pobierz dane z endpointa sync
         fetch(CONFIG.restApiUrl + '/wp-json/wp-notes/v1/notes?author=' + request.userID, {
             method: 'GET',
             headers: { 'Authorization': 'Bearer ' + request.token }
@@ -84,12 +96,10 @@ class RemoteAPI extends API {
         .then(response => response.text())
         .then(response => JSON.parse(response))
         .then(remoteFiles => {
-            // Detect expired token
             if(remoteFiles.data && remoteFiles.data.status === 403) {
                 throw 403;
             }
 
-            // Porównaj te dane z plikiem files.json
             let pathToUserFiles = path.join(app.getPath('documents'), 'dziudek-wp-notes', (request.userID).toString());
             let pathToFilesList = path.join(pathToUserFiles, 'files.json');
             let localFiles = [];
@@ -98,7 +108,6 @@ class RemoteAPI extends API {
                 localFiles = JSON.parse(fs.readFileSync(pathToFilesList));
             }
 
-            // Sprawdź czy katalog użytkownika istnieje
             if(!fs.existsSync(pathToUserFiles)) {
                 try {
                     fs.mkdirSync(pathToUserFiles);
@@ -108,11 +117,8 @@ class RemoteAPI extends API {
                 }
             }
 
-            // Określ pliki do usunięcia
             let filesToRemove = RemoteAPI.detectFilesToRemove(remoteFiles, localFiles);
-            // Usuń zbędne notatki
             localFiles = RemoteAPI.removeFiles(filesToRemove, localFiles, request.userID);
-            // Określ pliki do utworzenia/zaktualizowania
             let filesToUpdate = RemoteAPI.detectFilesToUpdate(remoteFiles, localFiles);
 
             return {
@@ -121,7 +127,6 @@ class RemoteAPI extends API {
             };
         }).then(dataToUpdate => {
             let localFiles = dataToUpdate.localFiles;
-            // Pobierz zaktualizowane notatki i zapisz plik files.json
             let idsQuery = dataToUpdate.filesToUpdate.map(id => 'include[]=' + id).join('&');
 
             fetch(CONFIG.restApiUrl + '/wp-json/wp/v2/wp-notes?status=private&author=' + request.userID + '&' + idsQuery, {
@@ -141,22 +146,18 @@ class RemoteAPI extends API {
                         title: postData.title.plaintext,
                         modificationDate: postData.modified_gmt
                     };
-                    // Sprawdź czy w localFiles istnieje plik o danym ID
+
                     if(localFileIndex) {
-                        // Jeśli tak - zaktualizuj mu datę modyfikacji i tytuł
                         localFiles[localFileIndex] = updatedFile;
                     } else {
-                        // Jeśli nie - dodaj nowy rekord
                         localFiles.push(updatedFile);
                     }
 
-                    // Zapisz plik
                     fs.writeFileSync(path.join(pathToUserFiles, postData.id + '.md'), postData.content.plaintext);
                 }
 
                 return localFiles;
             }).then(localFiles => {
-                // Zapisz nowy plik files.json
                 let pathToUserFiles = path.join(app.getPath('documents'), 'dziudek-wp-notes', (request.userID).toString());
                 let pathToFilesList = path.join(pathToUserFiles, 'files.json');
 
@@ -176,6 +177,14 @@ class RemoteAPI extends API {
         });
     }
 
+    /**
+     *
+     * Finds local posts to remove
+     *
+     * @param remoteFiles - list of the remote files
+     * @param localFiles - list of the local files
+     *
+     */
     static detectFilesToRemove(remoteFiles, localFiles) {
         let localIDs,
             remoteIDs,
@@ -198,6 +207,15 @@ class RemoteAPI extends API {
         return toRemove;
     }
 
+    /**
+     *
+     * Removes local posts
+     *
+     * @param filesToRemove - list of the files to remove
+     * @param localFiles - list of the local files
+     * @param userID - ID of the user
+     *
+     */
     static removeFiles(filesToRemove, localFiles, userID) {
         let pathToUserFiles = path.join(app.getPath('documents'), 'dziudek-wp-notes', (userID).toString());
         localFiles = localFiles.filter(item => filesToRemove.indexOf(item.id) === -1);
@@ -213,6 +231,14 @@ class RemoteAPI extends API {
         return localFiles;
     }
 
+    /**
+     *
+     * Finds local files to update
+     *
+     * @param remoteFiles - list of the remote files
+     * @param localFiles - list of the local files
+     *
+     */
     static detectFilesToUpdate(remoteFiles, localFiles) {
         let filesToUpdate = [];
 
@@ -232,10 +258,17 @@ class RemoteAPI extends API {
         return filesToUpdate;
     }
 
+    /**
+     *
+     * Adds post data remotely
+     *
+     * @param event - handler for sending responses
+     * @param request - object with JWT token and data to upload
+     *
+     */
     static addRemotePost(event, request) {
         request.data.status = "private";
 
-        // Pobierz dane z endpointa sync
         fetch(CONFIG.restApiUrl + '/wp-json/wp/v2/wp-notes/', {
             method: 'POST',
             body: JSON.stringify(request.data),
@@ -247,7 +280,6 @@ class RemoteAPI extends API {
         .then(response => response.text())
         .then(response => JSON.parse(response))
         .then(response => {
-            // Detect expired token
             if(response.data && response.data.status === 403) {
                 throw 403;
             }
@@ -263,6 +295,14 @@ class RemoteAPI extends API {
         });
     }
 
+    /**
+     *
+     * Edits post data remotely
+     *
+     * @param event - handler for sending responses
+     * @param request - object with JWT token and data to upload
+     *
+     */
     static editRemotePost(event, request) {
         // Pobierz dane z endpointa sync
         fetch(CONFIG.restApiUrl + '/wp-json/wp/v2/wp-notes/' + request.id, {
@@ -292,6 +332,14 @@ class RemoteAPI extends API {
         });
     }
 
+    /**
+     *
+     * Removes post data remotely
+     *
+     * @param event - handler for sending responses
+     * @param request - object with JWT token and post ID
+     *
+     */
     static removeRemotePost(event, request) {
         // Pobierz dane z endpointa sync
         fetch(CONFIG.restApiUrl + '/wp-json/wp/v2/wp-notes/' + request.id, {

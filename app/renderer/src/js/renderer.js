@@ -24,6 +24,7 @@ const template = [{
         {
             label: "Wyloguj się",
             click: function() {
+                // Use App component logout function
                 appWrapper.logout();
             }
         },
@@ -31,6 +32,7 @@ const template = [{
             label: "Zamknij",
             accelerator: "Command+Q",
             click: function() {
+                // Quit the app
                 mainProcess.quitApp();
             }
         }
@@ -41,6 +43,7 @@ const template = [{
             label: "Zapisz zmiany",
             accelerator: "CmdOrCtrl+S",
             click: function() {
+                // Use App component saveChanges function
                 appWrapper.saveChanges();
             }
         },

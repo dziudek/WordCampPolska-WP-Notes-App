@@ -10,15 +10,31 @@ class Item extends EventEmitter {
         Moment.locale('pl');
     }
 
+    /*
+     * Display specific post
+     *
+     * @param id - ID of the post to display
+     */
     showPost(id) {
         this.dispatch('item-show', id);
     }
 
+    /*
+     * Removes specific post
+     *
+     * @param id - ID of the post to delete
+     * @param event - event data
+     */
     deletePost(id, event) {
         event.stopPropagation();
         this.dispatch('item-remove', id);
     }
 
+    /*
+     * Transforms timestamp into formatted string
+     *
+     * @param timestamp - timestamp to transform into string
+     */
     getFormattedDate(timestamp) {
         let date = Moment.tz(timestamp, "Europe/Warsaw");
         return date.format('MMMM Do YYYY, H:mm:ss');

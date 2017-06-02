@@ -12,11 +12,21 @@ class Sidebar extends EventEmitter {
         this.subscribe('active-item-change', this.setActiveItem.bind(this));
     }
 
+    /*
+     * Adding post item
+     *
+     * @param event - event data
+     */
     addPost(event) {
         event.preventDefault();
         this.dispatch('item-add');
     }
 
+    /*
+     * Setting active item on the posts list
+     *
+     * @param id - id of the post to mark as active
+     */
     setActiveItem(id) {
         this.setState({ activeItem: id });
     }
