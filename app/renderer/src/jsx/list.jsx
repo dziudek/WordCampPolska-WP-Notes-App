@@ -9,7 +9,7 @@ class List extends EventEmitter {
         this.subscribe('search-change', this.searchChange.bind(this));
     }
 
-    /*
+    /**
      * Callback for the search input change
      *
      * @param phrase - updated content of the input

@@ -3,7 +3,6 @@ const {app, ipcMain} = require('electron');
 const fs = require('fs');
 const path = require('path');
 const API = require('./api.js');
-const Utils = require('./utils.js');
 const moment = require('moment');
 
 /*

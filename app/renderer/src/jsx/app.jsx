@@ -30,7 +30,7 @@ class App extends EventEmitter {
         this.subscribe('user-logged-in', this.setUserData.bind(this));
     }
 
-    /*
+    /**
      * Retrieves list of the local user posts
      *
      * @param userID - ID of the user
@@ -64,7 +64,7 @@ class App extends EventEmitter {
         });
     }
 
-    /*
+    /**
      * Retrieves title of a post with specific post ID
      *
      * @param id - id of the post
@@ -83,7 +83,7 @@ class App extends EventEmitter {
         return title;
     }
 
-    /*
+    /**
      * Creates session data for the user and retrieves post data
      *
      * @param response - object with token and user data
@@ -98,7 +98,7 @@ class App extends EventEmitter {
         });
     }
 
-    /*
+    /**
      * Loads a specific post
      *
      * @param id - ID of the post to load
@@ -119,7 +119,7 @@ class App extends EventEmitter {
         });
     }
 
-    /*
+    /**
      * Adds new posts
      */
     addPost() {
@@ -132,7 +132,7 @@ class App extends EventEmitter {
         this.editor.setContent('', '');
     }
 
-    /*
+    /**
      * Removes post with a given ID
      *
      * @param - id - ID of the post to remove
@@ -166,7 +166,7 @@ class App extends EventEmitter {
         });
     }
 
-    /*
+    /**
      * Saves changes in the post
      *
      * @param onWindowClose - flag used to detect if app is closing
@@ -192,7 +192,7 @@ class App extends EventEmitter {
         }
     }
 
-    /*
+    /**
      * Creates new post remotely and locally
      *
      * @param addedPost - post data to store locally and remotely
@@ -251,7 +251,7 @@ class App extends EventEmitter {
         });
     }
 
-    /*
+    /**
      * Edits post remotely and locally
      *
      * @param updatedPost - post data to store locally and remotely
@@ -312,7 +312,7 @@ class App extends EventEmitter {
         });
     }
 
-    /*
+    /**
      * Removes user session data
      */
     logout() {
@@ -328,7 +328,7 @@ class App extends EventEmitter {
         this.editor.setContent('', '');
     }
 
-    /*
+    /**
      * Checks given response for errors existence
      *
      * @param response - response to check for errors
@@ -367,7 +367,7 @@ class App extends EventEmitter {
             </div>
         );
     }
-    
+
     componentWillUnmount() {
         this.unsubscribe('item-remove', this.removePost);
         this.unsubscribe('item-show', this.getPost);

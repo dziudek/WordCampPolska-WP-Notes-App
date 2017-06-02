@@ -6,7 +6,7 @@ class Search extends EventEmitter {
         super(props);
     }
 
-    /*
+    /**
      * Callback for the input value change
      */
     searchChange() {

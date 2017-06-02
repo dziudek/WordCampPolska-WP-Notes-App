@@ -15,7 +15,7 @@ class Login extends EventEmitter {
         };
     }
 
-    /*
+    /**
      * Function used to retrieve token
      */
     getToken() {
@@ -33,7 +33,7 @@ class Login extends EventEmitter {
         });
     }
 
-    /*
+    /**
      * Function called when token is retrieved
      *
      * @param response - object with the autorization data
