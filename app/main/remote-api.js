@@ -41,18 +41,8 @@ class RemoteAPI extends API {
             headers: { 'Content-Type': 'application/json' }
         })
         .then(response => response.text())
-        .then(body => {
-            let response = {};
-
-            try {
-                response = JSON.parse(body);
-            } catch(e) {
-                RemoteAPI.error(event, 'getTokenResponse', 500, ERRORS.DATA_PARSE_ERROR);
-                return;
-            }
-
-            return response;
-        }).then(response => {
+        .then(response => JSON.parse(response))
+        .then(response => {
             if(!response) {
                 return;
             }
@@ -63,15 +53,7 @@ class RemoteAPI extends API {
             })
             .then(userResponse => userResponse.text())
             .then(body => {
-                let userResponse = {};
-
-                try {
-                    userResponse = JSON.parse(body);
-                } catch(e) {
-                    RemoteAPI.error(event, 'getTokenResponse', 500, ERRORS.DATA_PARSE_ERROR);
-                    return;
-                }
-
+                let userResponse = JSON.parse(body);
                 response.user_id = userResponse.id;
                 event.sender.send('getTokenResponse', response);
             })
@@ -99,7 +81,11 @@ class RemoteAPI extends API {
                 throw 403;
             }
 
-            let pathToUserFiles = path.join(app.getPath('documents'), 'dziudek-wp-notes', (request.userID).toString());
+            let pathToUserFiles = path.join(
+                app.getPath('documents'),
+                'dziudek-wp-notes',
+                (request.userID).toString()
+            );
             let pathToFilesList = path.join(pathToUserFiles, 'files.json');
             let localFiles = [];
 
@@ -135,11 +121,14 @@ class RemoteAPI extends API {
             .then(response => response.text())
             .then(body => {
                 let remotePostsData = JSON.parse(body);
-                let pathToUserFiles = path.join(app.getPath('documents'), 'dziudek-wp-notes', (request.userID).toString());
+                let pathToUserFiles = path.join(
+                    app.getPath('documents'),
+                    'dziudek-wp-notes',
+                    (request.userID).toString()
+                );
 
                 for(let postData of remotePostsData) {
                     let localFileIndex = localFiles.find(localFile => localFile.id === postData.id);
-
                     let updatedFile = {
                         id: postData.id,
                         title: postData.title.plaintext,
@@ -167,13 +156,7 @@ class RemoteAPI extends API {
                 RemoteAPI.error(event, 'loadRemotePostsResponse', 500, ERRORS.SYNC_ERROR + err)
             });
         })
-        .catch(err => {
-            if(err === 403) {
-                RemoteAPI.error(event, 'loadRemotePostsResponse', 403, ERRORS.SYNC_ERROR);
-            }
-
-            RemoteAPI.error(event, 'loadRemotePostsResponse', 500, ERRORS.SYNC_ERROR + err);
-        });
+        .catch(err => RemoteAPI.errorCatch(err, event, 'loadRemotePostsResponse'));
     }
 
     /**
@@ -249,7 +232,10 @@ class RemoteAPI extends API {
                 continue;
             }
 
-            if(!localFiles[localFileIndex] || localFiles[localFileIndex].modificationDate !== remoteFile.modificationDate) {
+            if(
+                !localFiles[localFileIndex] ||
+                localFiles[localFileIndex].modificationDate !== remoteFile.modificationDate
+            ) {
                 filesToUpdate.push(remoteFile.id);
             }
         }
@@ -285,13 +271,7 @@ class RemoteAPI extends API {
 
             event.sender.send('addRemotePostResponse', response);
         })
-        .catch(err => {
-            if(err === 403) {
-                RemoteAPI.error(event, 'addRemotePostResponse', 403, ERRORS.SYNC_ERROR);
-            }
-
-            RemoteAPI.error(event, 'addRemotePostResponse', 500, ERRORS.SYNC_ERROR + err);
-        });
+        .catch(err => RemoteAPI.errorCatch(err, event, 'addRemotePostResponse'));
     }
 
     /**
@@ -322,13 +302,7 @@ class RemoteAPI extends API {
 
             event.sender.send('editRemotePostResponse', response);
         })
-        .catch(err => {
-            if(err === 403) {
-                RemoteAPI.error(event, 'editRemotePostResponse', 403, ERRORS.SYNC_ERROR);
-            }
-
-            RemoteAPI.error(event, 'editRemotePostResponse', 500, ERRORS.SYNC_ERROR + err);
-        });
+        .catch(err => RemoteAPI.errorCatch(err, event, 'editRemotePostResponse'));
     }
 
     /**
@@ -355,13 +329,22 @@ class RemoteAPI extends API {
 
             event.sender.send('removeRemotePostResponse', response);
         })
-        .catch(err => {
-            if(err === 403) {
-                RemoteAPI.error(event, 'removeRemotePostResponse', 403, ERRORS.SYNC_ERROR);
-            }
+        .catch(err => RemoteAPI.errorCatch(err, event, 'removeRemotePostResponse'));
+    }
 
-            RemoteAPI.error(event, 'removeRemotePostResponse', 500, ERRORS.SYNC_ERROR + err);
-        });
+    /**
+     * Catches error with some speicifc cases
+     *
+     * @param err - object with error details
+     * @param event - event sender handler
+     * @param eventName - name of the response event to dispatch
+     */
+    static errorCatch(err, event, eventName) {
+        if(err === 403) {
+            RemoteAPI.error(event, eventName, 403, ERRORS.SYNC_ERROR);
+        }
+
+        RemoteAPI.error(event, eventName, 500, ERRORS.SYNC_ERROR + err);
     }
 }
 
